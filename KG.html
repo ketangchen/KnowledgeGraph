@@ -6,33 +6,6 @@
     <title>知识图谱可视化系统</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        /* 保持原样式不变，新增文件上传按钮样式 */
-        .file-operations {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-        }
-        
-        #file-upload {
-            display: none;
-        }
-        
-        .upload-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        
-        .upload-btn:hover {
-            background-color: #45a049;
-        }
-
-        /* 其他原有样式保持不变 */
         * {
             margin: 0;
             padding: 0;
@@ -41,84 +14,29 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
-            color: #fff;
-            min-height: 100vh;
+            background-color: #1a1a2e;
+            color: #eaeaea;
             display: flex;
             flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        .container {
+        .app-container {
             display: flex;
             flex: 1;
-            height: calc(100vh - 60px);
-            padding: 15px;
-            gap: 15px;
-        }
-
-        header {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 15px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            letter-spacing: 1px;
-        }
-
-        .search-bar {
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-bar input {
-            padding: 8px 15px;
-            border-radius: 20px;
-            border: none;
-            width: 250px;
-            background-color: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-        }
-
-        .search-bar button {
-            padding: 8px 15px;
-            border-radius: 20px;
-            border: none;
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .search-bar button:hover {
-            background-color: #45a049;
+            overflow: hidden;
         }
 
         .panel {
-            background-color: rgba(0, 0, 0, 0.6);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .left-panel {
-            width: 25%;
-            min-width: 300px;
+            width: 300px;
+            background-color: #252a41;
+            padding: 15px;
             overflow-y: auto;
         }
 
         .visualization-panel {
             flex: 1;
-            background-color: rgba(0, 0, 0, 0.6);
-            border-radius: 10px;
-            overflow: hidden;
             position: relative;
         }
 
@@ -127,36 +45,50 @@
             height: 100%;
         }
 
-        .right-panel {
-            width: 25%;
-            min-width: 300px;
-            overflow-y: auto;
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #424865;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .control-btn:hover {
+            background-color: #69b3a2;
         }
 
         .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            margin-bottom: 15px;
         }
 
         label {
-            font-size: 0.9rem;
-            color: #ddd;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #b8b8b8;
         }
 
         input, select, textarea {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #555;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1rem;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #424865;
+            border-radius: 4px;
+            background-color: #1a1a2e;
+            color: #eaeaea;
+            font-size: 14px;
         }
 
         .btn-group {
@@ -165,246 +97,151 @@
             margin-top: 10px;
         }
 
-        button {
-            padding: 10px;
-            border-radius: 5px;
+        .btn-primary, .btn-secondary {
+            padding: 8px 15px;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
+            font-size: 14px;
         }
 
         .btn-primary {
-            background-color: #2196F3;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #0b7dda;
-        }
-
-        .btn-danger {
-            background-color: #f44336;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #d32f2f;
+            background-color: #69b3a2;
+            color: #1a1a2e;
+            font-weight: bold;
         }
 
         .btn-secondary {
-            background-color: #555;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: #444;
-        }
-
-        .entity-list, .relation-list {
-            margin-top: 20px;
+            background-color: #424865;
+            color: #eaeaea;
         }
 
         .list-title {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             padding-bottom: 5px;
-            border-bottom: 1px solid #555;
+            border-bottom: 1px solid #424865;
         }
 
-        .entity-item, .relation-item {
-            background-color: rgba(255, 255, 255, 0.1);
+        .entity-item {
+            background-color: #1a1a2e;
+            border-radius: 4px;
             padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            transition: transform 0.2s;
         }
 
-        .entity-item:hover, .relation-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+        .entity-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .entity-info p {
+            font-size: 12px;
+            color: #b8b8b8;
+            margin-top: 3px;
         }
 
         .entity-actions {
             display: flex;
             gap: 5px;
+            margin-top: 5px;
         }
 
         .action-btn {
-            width: 24px;
-            height: 24px;
-            border-radius: 3px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.8rem;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover {
+            opacity: 1;
         }
 
         .edit-btn {
-            background-color: #2196F3;
+            color: #69b3a2;
         }
 
         .delete-btn {
-            background-color: #f44336;
-        }
-
-        .detail-header {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #555;
-        }
-
-        .detail-section {
-            margin-bottom: 20px;
-        }
-
-        .detail-section h3 {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            color: #ddd;
-        }
-
-        .detail-content {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 5px;
-            line-height: 1.6;
+            color: #e94560;
         }
 
         .no-data {
+            color: #b8b8b8;
             text-align: center;
             padding: 20px;
-            color: #aaa;
             font-style: italic;
         }
 
-        .controls {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 100;
+        .detail-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #424865;
         }
 
-        .control-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
+        .detail-section {
+            margin-bottom: 15px;
         }
 
-        .control-btn:hover {
-            background-color: rgba(0, 0, 0, 0.9);
-            transform: scale(1.1);
+        .detail-section h3 {
+            font-size: 14px;
+            color: #b8b8b8;
+            margin-bottom: 5px;
         }
 
-        /* 节点和连线样式 */
-        .node circle {
-            fill: #69b3a2;
-            stroke: white;
-            stroke-width: 2px;
-            transition: all 0.3s;
+        .detail-content {
+            font-size: 15px;
+            padding: 5px;
+            background-color: #1a1a2e;
+            border-radius: 4px;
         }
 
-        .node text {
-            fill: white;
+        .links line {
+            stroke: #999;
+            stroke-opacity: 0.6;
+        }
+
+        .nodes circle {
+            stroke: #fff;
+            stroke-width: 1.5px;
+        }
+
+        .link-labels text {
+            fill: #b8b8b8;
             font-size: 12px;
             text-anchor: middle;
         }
 
-        .node:hover circle {
-            r: 12;
-            fill: #ff6b6b;
+        .nodes text {
+            font-size: 12px;
         }
 
-        .node.highlighted circle {
-            r: 15;
-            fill: #ffd700;
-            stroke: #fff;
+        .highlighted circle {
+            stroke: #e94560;
             stroke-width: 3px;
         }
 
-        .link {
-            stroke: #999;
-            stroke-opacity: 0.6;
-            stroke-width: 2px;
+        .search-container {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
         }
 
-        .link-label {
-            fill: #ddd;
-            font-size: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 2px;
-        }
-
-        @media (max-width: 1200px) {
-            .container {
-                flex-direction: column;
-                height: auto;
-            }
-
-            .left-panel, .right-panel {
-                width: 100%;
-                min-width: auto;
-                max-height: 300px;
-            }
-
-            .visualization-panel {
-                height: 600px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px;
-            }
-
-            .search-bar {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .search-bar input {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
+        #search-input {
+            flex: 1;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>知识图谱可视化系统</h1>
-        <div class="search-bar">
-            <input type="text" id="search-input" placeholder="搜索实体或关系...">
-            <button id="search-btn">搜索</button>
-        </div>
-    </header>
-
-    <div class="container">
+    <div class="app-container">
         <div class="panel left-panel">
             <div class="form-section">
-                <h2 id="entity-form-title">添加实体</h2>
+                <h3 id="entity-form-title" class="list-title">添加实体</h3>
                 <div class="form-group">
                     <label for="entity-id">实体ID</label>
-                    <input type="text" id="entity-id" placeholder="输入实体唯一ID">
+                    <input type="text" id="entity-id" placeholder="输入唯一ID">
                 </div>
                 <div class="form-group">
                     <label for="entity-name">实体名称</label>
@@ -412,7 +249,7 @@
                 </div>
                 <div class="form-group">
                     <label for="entity-desc">实体描述</label>
-                    <textarea id="entity-desc" rows="3" placeholder="输入实体描述信息"></textarea>
+                    <textarea id="entity-desc" rows="3" placeholder="输入实体描述"></textarea>
                 </div>
                 <div class="btn-group">
                     <button id="add-entity" class="btn-primary">添加实体</button>
@@ -422,35 +259,24 @@
                 </div>
             </div>
 
-            <div class="form-section">
-                <h2>添加关系</h2>
+            <div class="form-section" style="margin-top: 30px;">
+                <h3 class="list-title">添加关系</h3>
                 <div class="form-group">
                     <label for="source-entity">源实体</label>
-                    <select id="source-entity">
-                        <option value="">-- 选择源实体 --</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="relation-type">关系类型</label>
-                    <input type="text" id="relation-type" placeholder="例如：属于、包含、关联等">
+                    <select id="source-entity"></select>
                 </div>
                 <div class="form-group">
                     <label for="target-entity">目标实体</label>
-                    <select id="target-entity">
-                        <option value="">-- 选择目标实体 --</option>
-                    </select>
+                    <select id="target-entity"></select>
+                </div>
+                <div class="form-group">
+                    <label for="relation-type">关系类型</label>
+                    <input type="text" id="relation-type" placeholder="例如：包含、继承">
                 </div>
                 <div class="btn-group">
                     <button id="add-relation" class="btn-primary">添加关系</button>
                     <button id="clear-relation-form" class="btn-secondary">清空</button>
                 </div>
-            </div>
-
-            <!-- 新增文件操作区域 -->
-            <div class="file-operations">
-                <button class="upload-btn" id="upload-btn">上传JSON文件</button>
-                <input type="file" id="file-upload" accept=".json">
-                <button class="btn-primary" id="save-to-file">保存到本地</button>
             </div>
 
             <div class="entity-list">
@@ -471,6 +297,10 @@
         </div>
 
         <div class="panel right-panel">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="搜索实体或关系...">
+                <button id="search-btn" class="btn-primary">搜索</button>
+            </div>
             <div id="detail-view">
                 <div class="no-data">选择一个实体或关系查看详情</div>
             </div>
@@ -508,10 +338,6 @@
         const zoomOutBtn = document.getElementById('zoom-out');
         const resetViewBtn = document.getElementById('reset-view');
         const entityFormTitle = document.getElementById('entity-form-title');
-        // 新增文件操作元素
-        const fileUpload = document.getElementById('file-upload');
-        const uploadBtn = document.getElementById('upload-btn');
-        const saveToFileBtn = document.getElementById('save-to-file');
 
         // 页面加载完成后初始化
         window.addEventListener('DOMContentLoaded', initialize);
@@ -568,6 +394,8 @@
 
         async function saveDataToFile() {
             try {
+                // 由于浏览器安全限制，直接写入本地文件需通过后端接口
+                // 此处模拟文件保存逻辑，实际项目需配合后端实现
                 const dataStr = JSON.stringify(graphData, null, 2);
                 const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
 
@@ -583,60 +411,6 @@
                 console.error('保存数据失败：', error);
                 alert('数据保存失败，请重试');
             }
-        }
-
-        // 新增：处理文件上传
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            // 验证文件类型
-            if (!file.name.endsWith('.json')) {
-                alert('请上传JSON格式的文件');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const content = e.target.result;
-                    const data = JSON.parse(content);
-                    
-                    // 验证数据格式
-                    if (!data.nodes || !data.links || !Array.isArray(data.nodes) || !Array.isArray(data.links)) {
-                        alert('JSON文件格式不正确，需要包含nodes和links数组');
-                        return;
-                    }
-                    
-                    // 验证节点和链接的必要属性
-                    const nodesValid = data.nodes.every(node => node.id && node.name);
-                    const linksValid = data.links.every(link => link.source && link.target && link.type);
-                    
-                    if (!nodesValid) {
-                        alert('节点数据不完整，每个节点需要包含id和name属性');
-                        return;
-                    }
-                    
-                    if (!linksValid) {
-                        alert('关系数据不完整，每个关系需要包含source、target和type属性');
-                        return;
-                    }
-                    
-                    // 应用新数据
-                    graphData = data;
-                    updateEntitySelects();
-                    renderEntityList();
-                    reloadGraph();
-                    alert(`成功导入数据：${data.nodes.length}个实体，${data.links.length}个关系`);
-                } catch (error) {
-                    console.error('解析JSON文件失败：', error);
-                    alert('解析文件失败，请检查文件格式是否正确');
-                }
-            };
-            reader.readAsText(file);
-            
-            // 重置文件输入，允许重复上传同一文件
-            fileUpload.value = '';
         }
 
         // ------------------------------
@@ -721,6 +495,39 @@
             cancelEditBtn.style.display = 'none';
         }
 
+        function clearEntityForm() {
+            entityIdInput.value = '';
+            entityNameInput.value = '';
+            entityDescInput.value = '';
+        }
+
+        function addEntity() {
+            const id = entityIdInput.value.trim();
+            const name = entityNameInput.value.trim();
+            const description = entityDescInput.value.trim();
+
+            if (!id || !name) {
+                alert('实体ID和名称不能为空');
+                return;
+            }
+
+            if (graphData.nodes.some(node => node.id === id)) {
+                alert('实体ID已存在');
+                return;
+            }
+
+            // 添加新实体
+            graphData.nodes.push({ id, name, description });
+
+            // 刷新界面并保存
+            updateEntitySelects();
+            renderEntityList();
+            reloadGraph();
+            saveDataToFile();
+            clearEntityForm();
+            alert('实体添加成功');
+        }
+
         function updateEntity() {
             if (!editingEntityId) return;
 
@@ -745,19 +552,29 @@
 
             // 刷新界面并保存
             renderEntityList();
+            updateEntitySelects(); // 更新下拉选择框中的实体名称
             reloadGraph();
             saveDataToFile();
             alert('实体更新成功');
+
+            // 如果有选中的节点是当前编辑的节点，更新详情显示
+            if (selectedNode && selectedNode.id === editingEntityId) {
+                showEntityDetail(entity);
+            }
+
             cancelEdit();
         }
 
         function deleteEntity(id) {
             if (!confirm('确定要删除此实体吗？关联的关系也将被删除')) return;
 
-            // 删除关联的关系
-            graphData.links = graphData.links.filter(link =>
-                link.source !== id && link.target !== id
-            );
+            // 删除关联的关系（同时处理ID字符串和对象引用两种情况）
+            graphData.links = graphData.links.filter(link => {
+                // 处理对象引用的情况（D3初始化后会转换为对象）
+                const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+                const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+                return sourceId !== id && targetId !== id;
+            });
 
             // 删除实体
             graphData.nodes = graphData.nodes.filter(node => node.id !== id);
@@ -771,14 +588,59 @@
         }
 
         // ------------------------------
-        // 关系管理（删除功能）
+        // 关系管理（添加/删除）
         // ------------------------------
+        function addRelation() {
+            const sourceId = sourceEntitySelect.value;
+            const targetId = targetEntitySelect.value;
+            const type = relationTypeInput.value.trim();
+
+            if (!sourceId || !targetId || !type) {
+                alert('请完善关系信息');
+                return;
+            }
+
+            if (sourceId === targetId) {
+                alert('源实体和目标实体不能相同');
+                return;
+            }
+
+            // 检查关系是否已存在
+            const relationExists = graphData.links.some(link => {
+                const linkSourceId = typeof link.source === 'object' ? link.source.id : link.source;
+                const linkTargetId = typeof link.target === 'object' ? link.target.id : link.target;
+                return linkSourceId === sourceId && linkTargetId === targetId && link.type === type;
+            });
+
+            if (relationExists) {
+                alert('此关系已存在');
+                return;
+            }
+
+            // 添加新关系
+            graphData.links.push({ source: sourceId, target: targetId, type });
+
+            // 刷新界面并保存
+            reloadGraph();
+            saveDataToFile();
+            clearRelationForm();
+            alert('关系添加成功');
+        }
+
+        function clearRelationForm() {
+            sourceEntitySelect.value = '';
+            targetEntitySelect.value = '';
+            relationTypeInput.value = '';
+        }
+
         function deleteRelation(sourceId, targetId, type) {
             if (!confirm(`确定要删除关系「${type}」吗？`)) return;
 
-            graphData.links = graphData.links.filter(link =>
-                !(link.source === sourceId && link.target === targetId && link.type === type)
-            );
+            graphData.links = graphData.links.filter(link => {
+                const linkSourceId = typeof link.source === 'object' ? link.source.id : link.source;
+                const linkTargetId = typeof link.target === 'object' ? link.target.id : link.target;
+                return !(linkSourceId === sourceId && linkTargetId === targetId && link.type === type);
+            });
 
             // 刷新界面并保存
             reloadGraph();
@@ -828,7 +690,7 @@
                 .attr('class', 'link')
                 .attr('stroke-width', 2);
 
-            // 绘制连线标签
+            // 绘制连线标签（可点击删除）
             const linkLabel = g.append('g')
                 .attr('class', 'link-labels')
                 .selectAll('text')
@@ -836,7 +698,12 @@
                 .enter()
                 .append('text')
                 .attr('class', 'link-label')
-                .text(d => d.type);
+                .text(d => d.type)
+                .on('click', (event, d) => {
+                    const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+                    const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+                    deleteRelation(sourceId, targetId, d.type);
+                });
 
             // 绘制节点（包含圆圈和文本）
             const node = g.append('g')
@@ -845,6 +712,7 @@
                 .data(graphData.nodes)
                 .enter()
                 .append('g')
+                .attr('data-id', d => d.id) // 添加data-id属性用于定位
                 .call(d3.drag()
                     .on('start', dragstarted)
                     .on('drag', dragged)
@@ -864,8 +732,9 @@
 
             // 节点点击事件
             node.on('click', (event, d) => {
+                selectedNode = d; // 保存选中的节点
                 // 移除之前的高亮
-                g.selectAll('.node').classed('highlighted', false);
+                g.selectAll('.nodes g').classed('highlighted', false);
                 // 高亮当前节点
                 d3.select(event.currentTarget).classed('highlighted', true);
                 showEntityDetail(d);
@@ -909,7 +778,66 @@
 
         function reloadGraph() {
             console.log('重新加载图谱，节点数：', graphData.nodes.length);
+            // 重置链接的source和target为ID引用，确保重新绑定正确
+            graphData.links.forEach(link => {
+                if (typeof link.source !== 'string') link.source = link.source.id;
+                if (typeof link.target !== 'string') link.target = link.target.id;
+            });
             initializeGraph();
+        }
+
+        // ------------------------------
+        // 详情展示
+        // ------------------------------
+        function showEntityDetail(entity) {
+            selectedNode = entity;
+            const relatedLinks = graphData.links.filter(link => {
+                const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+                const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+                return sourceId === entity.id || targetId === entity.id;
+            });
+
+            let relationsHtml = '';
+            relatedLinks.forEach(link => {
+                const isSource = (typeof link.source === 'object' ? link.source.id : link.source) === entity.id;
+                const otherNodeId = isSource
+                    ? (typeof link.target === 'object' ? link.target.id : link.target)
+                    : (typeof link.source === 'object' ? link.source.id : link.source);
+                const otherNode = graphData.nodes.find(n => n.id === otherNodeId);
+
+                relationsHtml += `
+                    <div class="relation-item">
+                        <strong>${isSource ? '→ ' : '← '}${link.type}</strong>
+                        <div>${otherNode ? otherNode.name : '未知实体'}</div>
+                        <div class="action-btn delete-btn" style="display: inline-block; margin-top: 5px;"
+                            onclick="deleteRelation('${link.source}', '${link.target}', '${link.type}')">
+                            删除关系
+                        </div>
+                    </div>
+                `;
+            });
+
+            detailView.innerHTML = `
+                <div class="detail-header">实体详情</div>
+                <div class="detail-section">
+                    <h3>实体ID</h3>
+                    <div class="detail-content">${entity.id}</div>
+                </div>
+                <div class="detail-section">
+                    <h3>实体名称</h3>
+                    <div class="detail-content">${entity.name}</div>
+                </div>
+                <div class="detail-section">
+                    <h3>实体描述</h3>
+                    <div class="detail-content">${entity.description || '无描述'}</div>
+                </div>
+                <div class="detail-section">
+                    <h3>关联关系 (${relatedLinks.length})</h3>
+                    <div class="detail-content">
+                        ${relationsHtml || '无关联关系'}
+                    </div>
+                </div>
+            `;
         }
 
         // ------------------------------
@@ -938,8 +866,11 @@
             );
 
             if (matchedLink) {
-                const sourceEntity = graphData.nodes.find(n => n.id === matchedLink.source);
-                const targetEntity = graphData.nodes.find(n => n.id === matchedLink.target);
+                const sourceId = typeof matchedLink.source === 'object' ? matchedLink.source.id : matchedLink.source;
+                const targetId = typeof matchedLink.target === 'object' ? matchedLink.target.id : matchedLink.target;
+                const sourceEntity = graphData.nodes.find(n => n.id === sourceId);
+                const targetEntity = graphData.nodes.find(n => n.id === targetId);
+
                 detailView.innerHTML = `
                     <div class="detail-header">关系详情</div>
                     <div class="detail-section">
@@ -952,8 +883,12 @@
                             ${sourceEntity?.name || '未知实体'} → ${targetEntity?.name || '未知实体'}
                         </div>
                     </div>
+                    <div class="action-btn delete-btn" style="margin-top: 10px;"
+                        onclick="deleteRelation('${sourceId}', '${targetId}', '${matchedLink.type}')">
+                        删除此关系
+                    </div>
                 `;
-                // 定位到关系对应的两个节点
+                // 定位到关系对应的源节点
                 if (sourceEntity) locateNode(sourceEntity.id);
                 return;
             }
@@ -966,8 +901,8 @@
             if (!node || !svg) return;
 
             // 获取节点当前位置
-            const nodeElement = d3.select(`.node g[data-id="${nodeId}"]`);
-            if (!nodeElement) return;
+            const nodeElement = d3.select(`.nodes g[data-id="${nodeId}"]`);
+            if (nodeElement.empty()) return;
 
             // 计算缩放中心（节点位置）
             const scale = 1.5; // 放大倍数
@@ -985,7 +920,7 @@
                 );
 
             // 高亮节点
-            d3.selectAll('.node').classed('highlighted', false);
+            d3.selectAll('.nodes g').classed('highlighted', false);
             nodeElement.classed('highlighted', true);
         }
 
@@ -994,178 +929,35 @@
         // ------------------------------
         function setupEventListeners() {
             // 实体操作
-            addEntityBtn.addEventListener('click', () => {
-                const id = entityIdInput.value.trim();
-                const name = entityNameInput.value.trim();
-                const description = entityDescInput.value.trim();
-
-                if (!id || !name) {
-                    alert('实体ID和名称不能为空！');
-                    return;
-                }
-                if (graphData.nodes.some(node => node.id === id)) {
-                    alert('该实体ID已存在，请更换！');
-                    return;
-                }
-
-                graphData.nodes.push({ id, name, description });
-                updateEntitySelects();
-                renderEntityList();
-                reloadGraph();
-                saveDataToFile();
-                clearEntityForm();
-                alert(`实体「${name}」添加成功！`);
-            });
-
+            addEntityBtn.addEventListener('click', addEntity);
             updateEntityBtn.addEventListener('click', updateEntity);
             cancelEditBtn.addEventListener('click', cancelEdit);
             clearEntityFormBtn.addEventListener('click', clearEntityForm);
 
             // 关系操作
-            addRelationBtn.addEventListener('click', () => {
-                const sourceId = sourceEntitySelect.value;
-                const targetId = targetEntitySelect.value;
-                const type = relationTypeInput.value.trim();
+            addRelationBtn.addEventListener('click', addRelation);
+            clearRelationFormBtn.addEventListener('click', clearRelationForm);
 
-                if (!sourceId || !targetId || !type) {
-                    alert('请选择源实体、目标实体并输入关系类型！');
-                    return;
-                }
-                if (sourceId === targetId) {
-                    alert('源实体和目标实体不能相同！');
-                    return;
-                }
-                const relationExists = graphData.links.some(link =>
-                    link.source === sourceId && link.target === targetId && link.type === type
-                );
-                if (relationExists) {
-                    alert('该关系已存在！');
-                    return;
-                }
-
-                graphData.links.push({ source: sourceId, target: targetId, type });
-                reloadGraph();
-                saveDataToFile();
-                clearRelationForm();
-                alert(`关系「${type}」添加成功！`);
-            });
-
-            clearRelationFormBtn.addEventListener('click', () => {
-                sourceEntitySelect.value = '';
-                targetEntitySelect.value = '';
-                relationTypeInput.value = '';
-            });
-
-            // 搜索与定位
+            // 搜索功能
             searchBtn.addEventListener('click', searchAndLocate);
-            searchInput.addEventListener('keydown', (e) => {
+            searchInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') searchAndLocate();
             });
 
             // 视图控制
             zoomInBtn.addEventListener('click', () => {
-                svg.transition().call(d3.zoom().transform, d3.zoomIdentity.scale(transform.k * 1.2));
+                svg.transition().call(d3.zoom().scaleBy, 1.3);
             });
 
             zoomOutBtn.addEventListener('click', () => {
-                svg.transition().call(d3.zoom().transform, d3.zoomIdentity.scale(transform.k / 1.2));
+                svg.transition().call(d3.zoom().scaleBy, 0.7);
             });
 
             resetViewBtn.addEventListener('click', () => {
-                svg.transition().call(d3.zoom().transform, d3.zoomIdentity);
-                graphData.nodes.forEach(d => { d.x = null; d.y = null; d.fx = null; d.fy = null; });
-                simulation.alpha(1).restart();
-                // 移除所有高亮
-                d3.selectAll('.node').classed('highlighted', false);
-            });
-
-            // 窗口大小变化时重新绘制图谱
-            window.addEventListener('resize', () => {
-                initializeGraph();
-            });
-
-            // 新增：文件上传事件
-            uploadBtn.addEventListener('click', () => {
-                fileUpload.click();
-            });
-            
-            fileUpload.addEventListener('change', handleFileUpload);
-            
-            // 新增：保存到本地文件
-            saveToFileBtn.addEventListener('click', () => {
-                saveDataToFile();
-            });
-        }
-
-        // 清空实体表单
-        function clearEntityForm() {
-            entityIdInput.value = '';
-            entityNameInput.value = '';
-            entityDescInput.value = '';
-        }
-
-        // 显示实体详情（包含关系删除功能）
-        function showEntityDetail(entity) {
-            if (!entity) return;
-
-            // 查找关联关系
-            const relatedLinks = graphData.links.filter(link =>
-                link.source === entity.id || link.target === entity.id
-            );
-
-            let relationsHtml = '';
-            relatedLinks.forEach(link => {
-                const isSource = link.source === entity.id;
-                const otherEntityId = isSource ? link.target : link.source;
-                const otherEntity = graphData.nodes.find(n => n.id === otherEntityId);
-                if (!otherEntity) return;
-
-                relationsHtml += `
-                    <div class="relation-item">
-                        <div>
-                            <p>${isSource ? entity.name : otherEntity.name}
-                            ${isSource ? '→' : '←'} ${link.type}
-                            ${isSource ? otherEntity.name : entity.name}</p>
-                        </div>
-                        <div class="entity-actions">
-                            <div class="action-btn delete-btn" title="删除关系"
-                                 data-source="${link.source}"
-                                 data-target="${link.target}"
-                                 data-type="${link.type}">🗑️</div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            detailView.innerHTML = `
-                <div class="detail-header">${entity.name}</div>
-                <div class="detail-section">
-                    <h3>实体ID</h3>
-                    <div class="detail-content">${entity.id}</div>
-                </div>
-                <div class="detail-section">
-                    <h3>描述</h3>
-                    <div class="detail-content">${entity.description || '无描述信息'}</div>
-                </div>
-                <div class="detail-section">
-                    <h3>关联关系</h3>
-                    <div class="relation-list">
-                        ${relationsHtml || '<div class="no-data">无关联关系</div>'}
-                    </div>
-                </div>
-            `;
-
-            // 为关系删除按钮绑定事件
-            document.querySelectorAll('.relation-item .delete-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const source = e.currentTarget.getAttribute('data-source');
-                    const target = e.currentTarget.getAttribute('data-target');
-                    const type = e.currentTarget.getAttribute('data-type');
-                    deleteRelation(source, target, type);
-                    // 重新显示当前实体详情
-                    showEntityDetail(entity);
-                });
+                svg.transition().call(
+                    d3.zoom().transform,
+                    d3.zoomIdentity
+                );
             });
         }
     </script>
